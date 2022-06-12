@@ -1,0 +1,433 @@
+---
+title: "Tarea LEC"
+author: "LEC de probabilidad y estadistica"
+date: "12/06/2022"
+output:
+  pdf_document: default
+  word_document: default
+  html_notebook: default
+  html_document:
+    df_print: paged
+---
+### Integrantes
+- Esteban
+- Matias
+- Oscar
+- Benja Perez
+- Diego Espinoza
+- Vicente Carvajal
+
+### Indice
+- 1.- Introduccion
+- 2.- Desarrollo
+-     2.1.- Parte 1
+-     2.2.- Parte 2
+-     2.3.- Parte 3
+- 3.- Conclusion
+
+# Datos
+Acciones de *TSLA, GME, AAPL, AMD, TWTR, NVDA, BABA*  
+
+Con portafolios de: 
+
+- TSLA, GME, AAPL 
+- AMD, TWTR, NVDA
+- BABA, APPL, NVDA
+
+#### Librerías
+
+- library(TeachingDemos)
+- library(tigerstats)
+- library(EnvStats)
+- library(quantmod)
+
+```{r include=FALSE, results='hide', message=FALSE }
+library(TeachingDemos)
+library(tigerstats)
+library(EnvStats)
+library(quantmod)
+```
+## Introduccion
+En este proyecto lo que buscamos es aplicar todo lo visto en la cátedra del ramo **LEC** para poder analizar y crear gráficos a través del valor de las acciones de ciertas empresas, ya sea **BABA, AMD, APPL**, etc. Con esto lo que buscamos es responder las preguntas solicitadas en la que se nos pide crear ciertos portafolios e interpretar datos obtenidos gracias a la librería **quantmod** que es la que nos brindara el valor de las acciones de las empresas que el informe nos brinda.
+
+# Desarrollo
+
+## Parte 1
+
+En esta pregunta se nos solicita crear 3 portafolios de inversión bajo nuestro criterio para graficar y analizar sus rentabilidades en los primeros 100 días. Tras investigar los conceptos, tenemos que la rentabilidad se considera una magnitud que se utiliza para valorar beneficios que se obtienen gracias a un capital invertido, las acciones se consideran activos que ofrecen esta rentabilidad, mientras que la rentabilidad de una acción consta de la relación de los dos conceptos definidos anteriormente, es decir, la relación de una acción en una empresa y su valor económico que toma gracias a la actividad que proporciona.
+
+Para calcular la rentabilidad de una acción en el tiempo t, usamos la fórmula: $R_{t}=\frac{P_{t}-P_{t-1}}{P_{t}}$
+
+- Siendo $P_{t}$ el precio de la acción i en el tiempo t
+- Siendo $R_{t}$ la rentabilida de la acción i en el tiempo t
+- Siendo $P_{t-1}$ el precio de la acción i en el tiempo t-1
+
+Acá aplicamos la librería de *quantmod* para buscar el valor de las inversiones entre **2019-01-01 y 2019-04-11** (Dirigirse al anexo para código completo). También indicar que se realizó este proceso para todas las empresas pedidas. 
+
+```{r results='hide', message=FALSE}
+getSymbols("TSLA", src = "yahoo", from = "2019-01-01", to = "2019-04-11", periodicity = "daily")
+```
+```{r include=FALSE, results='hide', message=FALSE}
+getSymbols("GME", src = "yahoo", from = "2019-01-01", to = "2019-04-11", periodicity = "daily")
+getSymbols("AAPL", src = "yahoo", from = "2019-01-01", to = "2019-04-11", periodicity = "daily")
+getSymbols("AMD", src = "yahoo", from = "2019-01-01", to = "2019-04-11", periodicity = "daily")
+getSymbols("TWTR", src = "yahoo", from = "2019-01-01", to = "2019-04-11", periodicity = "daily")
+getSymbols("BABA", src = "yahoo", from = "2019-01-01", to = "2019-04-11", periodicity = "daily")
+getSymbols("NVDA", src = "yahoo", from = "2019-01-01", to = "2019-04-11", periodicity = "daily")
+```
+
+
+Luego pasamos la ecuación código para calcular la rentabilidad de cada acción en los 100 días, cabe mencionar que en algunas empresas, sus acciones no tiene precio, por lo que se considera los días en que si tienen un valor, en el caso de **TSLA**, son 68 días dentro del rango de los 100 días solicitados:
+
+```{r}
+listaRentabilidad_TSLA <- c()
+
+for(t in 2:69){
+  precio = (TSLA$TSLA.Open[[t]] - TSLA$TSLA.Open[[t-1]])/TSLA$TSLA.Open[[t]] 
+  
+  listaRentabilidad_TSLA <- c(listaRentabilidad_TSLA , precio)
+
+}
+head(listaRentabilidad_TSLA, 6)  # visualizar 6 primeras líneas
+```
+```{r include=FALSE, results='hide', message=FALSE}
+listaRentabilidad_GME <- c()
+
+for(t in 2:69){
+  precio = (GME$GME.Open[[t]] - GME$GME.Open[[t-1]])/GME$GME.Open[[t]] 
+  
+  listaRentabilidad_GME <- c(listaRentabilidad_GME , precio)
+  
+}
+listaRentabilidad_GME
+#-------------------------------------------------------------------
+listaRentabilidad_AAPL <- c()
+
+
+for(t in 2:69){
+  precio = (AAPL$AAPL.Open[[t]] - AAPL$AAPL.Open[[t-1]])/AAPL$AAPL.Open[[t]] 
+  
+  listaRentabilidad_AAPL <- c(listaRentabilidad_AAPL , precio)
+  
+}
+listaRentabilidad_AAPL
+#-------------------------------------------------------------------
+listaRentabilidad_TWTR <- c()
+
+
+for(t in 2:69){
+  precio = (TWTR$TWTR.Open[[t]] - TWTR$TWTR.Open[[t-1]])/TWTR$TWTR.Open[[t]] 
+  
+  listaRentabilidad_TWTR <- c(listaRentabilidad_TWTR , precio)
+  
+}
+listaRentabilidad_TWTR
+#-------------------------------------------------------------------
+listaRentabilidadAMD <- c()
+
+for(t in 2:69){
+  precio = (AMD$AMD.Open[[t]] - AMD$AMD.Open[[t-1]])/AMD$AMD.Open[[t]] 
+  
+  listaRentabilidadAMD <- c(listaRentabilidadAMD , precio)
+}
+#-------------------------------------------------------------------
+listaRentabilidadNVDA <- c()
+
+for(t in 2:69){
+  precio = (NVDA$NVDA.Open[[t]] - NVDA$NVDA.Open[[t-1]])/NVDA$NVDA.Open[[t]] 
+  
+  listaRentabilidadNVDA <- c(listaRentabilidadNVDA , precio)
+}
+#-------------------------------------------------------------------
+listaRentabilidadBABA <- c()
+
+for(t in 2:69){
+  precio = (BABA$BABA.Open[[t]] - BABA$BABA.Open[[t-1]])/BABA$BABA.Open[[t]] 
+  
+  listaRentabilidadBABA <- c(listaRentabilidadBABA , precio)
+}
+```
+
+
+En este código usamos la columna **Open**, que nos da la rentabilidad al inicio del día, como la rentabilidad del tiempo t, y luego aplicamos la fórmula vista anteriormente en este código, lo cual nos otorga una lista de los valores de la rentabilidad de la acción **TSLA** en los primeros 100 días.
+
+Ya calculada todas las rentabilidades de cada empresa, comenzamos a crear los 3 portafolios, escogiendo los de la siguiente manera: 
+
+- *NVDA-TSLA-AMD*
+- *GME-BABA-AAPL*
+- *NVDA-BABA-AMD* 
+
+Procedemos a realizar la rentabilidad de cada portafolio según la siguiente ecuación:  
+$R_{p}=(w_{|} * R_{1}+w_{1} * R_{2}+w_{3} * R_{3})$
+
+Donde:
+
+- $w_{i}$ = Peso de la acción i
+- $R_{i}$ = Rentabilidad de la acción i
+- Tomamos cada $w_{i}$ como $1/3$
+
+Con esto, lo aplicamos en **R** mediante el siguiente código para formar los 3 portafolios, en este caso utilizamos el portafolio número 1 con las empresas **NVDA-TSLA-AMD** para mostrar el codigo:
+:
+```{r, fig.width=10, fig.height=4}
+portafolio_NVDA_TSLA_AMD <- c()
+
+for(t in 2:69){
+  promedio = (NVDA$NVDA.Open[[t]] + TSLA$TSLA.Open[[t]] + AMD$AMD.Open[[t]])/3
+  
+  portafolio_NVDA_TSLA_AMD <- c(portafolio_NVDA_TSLA_AMD , promedio)
+}
+plot(portafolio_NVDA_TSLA_AMD, type = "o", xlab= "Dia_i", ylab= "Rentabilidad del portafolio_i", 
+     main = "NVDA_TSLA_AMD", cex = 1, pch = 21, bg = "blue", col = "red")
+```
+
+Se muestra cómo definimos un portafolio, para luego meterlo en un ciclo for in range para que recorra toda la lista de las rentabilidades de las empresas, de esta manera se calcula la rentabilidad correspondiente para cada portafolio. 
+
+Ya explicado cómo funciona el código para crear un portafolio, se muestran los otros 2 gráficos correspondientes de los portafolios restantes, en este caso son los de las empresas **GME-BABA-AAPL** y **NVDA-BABA-AMD**.
+
+```{r include=FALSE, message=FALSE}
+#-------------------------------------------------------------------
+portafolio_GME_BABA_AAPL <- c()
+
+for(t in 2:69){
+  promedio_GME_BABA_AAPL = (GME$GME.Open[[t]] + BABA$BABA.Open[[t]] + AAPL$AAPL.Open[[t]])/3
+  
+  portafolio_GME_BABA_AAPL <- c(portafolio_GME_BABA_AAPL , promedio_GME_BABA_AAPL)
+}
+#----------------------------------------------------------------------
+portafolio_NVDA_BABA_AMD <- c()
+
+for(t in 2:69){
+  promedio_NVDA_BABA_AMD = (NVDA$NVDA.Open[[t]] + BABA$BABA.Open[[t]] + AMD$AMD.Open[[t]])/3
+  
+  portafolio_NVDA_BABA_AMD <- c(portafolio_NVDA_BABA_AMD , promedio_NVDA_BABA_AMD)
+}
+#----------------------------------------------------------------------
+```
+
+```{r echo=FALSE, fig.width=10, fig.height=4}
+plot(portafolio_GME_BABA_AAPL, type = "o", cex = 1, pch = 21, bg = "blue", col = "red", xlab= "Dia_i", ylab= "Rentabilidad del portafolio_i", main = "GME_BABA_AAPL")
+```
+```{r echo=FALSE, fig.width=10, fig.height=4}
+plot(portafolio_NVDA_BABA_AMD, type = "o", cex = 1, pch = 21, bg = "blue", col = "red", xlab= "Dia_i", ylab= "Rentabilidad del portafolio_i", main = "NVDA_BABA_AMD")
+
+```
+
+Para finalizar la **Parte 1** se muestra un gráfico comparativo para los 3 portafolios: 
+
+```{r echo=FALSE, fig.width=10, fig.height=5}
+x <- c( 1:68 )
+linea0 = portafolio_NVDA_TSLA_AMD
+linea1 = portafolio_GME_BABA_AAPL
+linea2 = portafolio_NVDA_BABA_AMD
+
+# guardamos los datos en un único data.frame
+data_por <- data.frame( x, linea0, linea1, linea2 )
+
+plot( c(1,68), c(37,88), type = "n", xlab = "Dia_i",
+      ylab="Renta_portafolios_i", main = "Rentabilidad de los portafolios" )
+
+# primer tratamiento
+lines( data_por$x,  data_por$linea0,
+       lwd = 0.7,
+       lty = 1,
+       col = "blue",
+       pch = 1 )
+
+# segundo tratamiento 
+lines( data_por$x, data_por$linea1,
+       lwd = 1.5,
+       lty = 2,
+       col = "darkorange1" )
+
+# tercer tratamiento    
+lines( data_por$x,data_por$linea2,
+       type = "b",
+       lwd = 1.3,
+       lty = 3,
+       col = "green4",
+       pch = 20 )
+legend( -1, 90, 1:3, cex=0.8, col = c("blue", "darkorange1", "green4"),
+        pch =1:3, lty=1:3, title="Portafolios", horiz = TRUE)
+```
+
+Explicando la leyenda, tenemos que:
+
+- NVDA-TSLA-AMD es la línea azul
+- GME-BABA-AAPL es la línea naranja
+- NVDA-BABA-AMD es la línea verde
+
+Del gráfico, podemos observar que el primer portafolio no sería una buena inversión, ya que es el con menor rentabilidad de los tres portafolios, mientras que el tercer portafolio sería la mejor inversión, dado que es el con mejor rentabilidad en los primeros 100 días.
+
+## Parte 2
+
+# a) 
+
+En el 2019 las acciones de **TSLA y GME** van hacia la baja, mientras que las acciones de **AAPL** suben. Donde cabe resalrtar que en un periodo entre mayo y julio las acciones de TSLA bajaron con una pendiente muy marcada, para luego recuperarse pero manteniendo su valor de manera constante.
+
+```{r fig.width=7, fig.height=5}
+acciones <- c("TSLA", "GME", "AAPL")
+
+datos <- data.frame(TSLA$TSLA.Open, AAPL$AAPL.Open, GME$GME.Open)
+
+fecha <- index(TSLA)
+
+plot(x=fecha,y=index(fecha) ,type='n',
+     xlab="Mes",
+     ylab="Valor Acción",
+     main="Acciones del 2019 de AAPL, \n GME, TSLA por mes")
+
+lines( fecha,  datos$TSLA.Open,
+       lwd = 0.7,
+       lty = 1,
+       col = "blue",
+       pch = 1 )
+
+lines(fecha,  datos$GME.Open,
+      lwd = 0.7,
+      lty = 1,
+      col = "darkorange1",
+      pch = 1 )
+
+lines( fecha,  datos$AAPL.Open,
+       lwd = 0.7,
+       lty = 1,
+       col = "green4",
+       pch = 1 )
+```
+
+# Leyenda
+
+- La  linea azul corresponde a  **TSLA**
+- La linea naranga corresponde a **GME**
+- La linea verde corresponde a **AAPL** 
+
+En el 2019 las acciones de **AMD TWTR NVDA**, se mantuvieron constante porque suben de una manera muy lenta.
+
+```{r fig.width=7, fig.height=5}
+acciones <- c("AMD", "TWTR", "NVDA")
+
+datos <- data.frame(AMD$AMD.Open, TWTR$TWTR.Open, NVDA$NVDA.Open)
+
+fecha <- index(AMD)
+
+plot(x=fecha,y=index(fecha) ,type='n',
+     xlab="Mes",
+     ylab="Valor accion",
+     main="Acciones del 2019 de AMD,\n TWTR, NVDA por mes")
+
+lines( fecha,  datos$AMD.Open,
+       lwd = 0.7,
+       lty = 1,
+       col = "blue",
+       pch = 1 )
+
+lines(fecha,  datos$TWTR.Open,
+      lwd = 0.7,
+      lty = 1,
+      col = "darkorange1",
+      pch = 1 )
+
+lines( fecha,  datos$NVDA.Open,
+       lwd = 0.7,
+       lty = 1,
+       col = "green4",
+       pch = 1 )
+```
+
+# Leyenda
+
+- La  linea azul corresponde a  **AMD**
+- La linea naranga corresponde a **TWTR**
+- La linea verde corresponde a **NVDA**
+
+En el 2019 las acciones de **BABA** son muy superiores a las acciones de **AAPL y NVDA**, pero que a medidados de mayo su valor decayo a valores cercanos a los de enero y febreo del mismo año, para luego recomponerse y crecer de una manera igual a las otras 2 acciones
+
+```{r fig.width=7, fig.height=5}
+acciones <- c('BABA', 'AAPL', 'NVDA')
+
+datos <- data.frame(BABA$BABA.Open, AAPL$AAPL.Open, NVDA$NVDA.Open)
+
+fecha <- index(BABA)
+
+plot(x=fecha,y=index(fecha) ,type='n',
+     xlab="Mes",
+     ylab="Valor accion",
+     main="Acciones del 2019 de BABA,\n APPL, NVDA por mes")
+
+lines( fecha,  datos$BABA.Open,
+       lwd = 0.7,
+       lty = 1,
+       col = "blue",
+       pch = 1 )
+
+lines(fecha,  datos$AAPL.Open,
+      lwd = 0.7,
+      lty = 1,
+      col = "darkorange1",
+      pch = 1 )
+
+lines( fecha,  datos$NVDA.Open,
+       lwd = 0.7,
+       lty = 1,
+       col = "green4",
+       pch = 1 )
+```
+
+# Leyenda
+
+- La  linea azul corresponde a **BABA**
+- La linea naranga corresponde **AAPL**
+- La linea verde corresponde a **NVDA**
+
+# b) 
+
+Si, porque en la mayoria de los casos la dif es mayor a 3 digitos, especialmente para el 6 mes. pero que en los meses 7 y 8 la diferencia no es tan significativo.
+
+```{r fig.width=8, fig.height=5}
+acciones <- c("AMD", "NVDA")
+
+var.test(x=unlist(listaRentabilidadAMD), 
+         y=unlist(listaRentabilidadNVDA), 
+         alternative = "two.sided", conf.level = 0.95)
+         
+#p-value > alpha=0.05  , se retien que ambas varianzas sean iguales al 95% de confianza 
+
+difMedias <- listaRentabilidadNVDA- listaRentabilidadAMD
+fecha=index(listaRentabilidadAMD)
+
+plot(difMedias,  xlab="Mes", ylab="Dif. Medias", main="Dif. Medias de AMD y NVDA en el 2019")
+```
+
+```{r echo=FALSE}
+testGC <- c(mean(listaRentabilidadAMD)- mean(listaRentabilidadNVDA)
+            - sd(listaRentabilidadAMD)/2 * qnorm(1-0.025),
+            mean(listaRentabilidadAMD)- mean(listaRentabilidadNVDA)
+            + sd(listaRentabilidadAMD)/2 * qnorm(1-0.025)
+)
+testGC
+```
+Con un nivel de significancia del 0.05, podemos decir que el intervalo, con una probabilidad de 95%, puede contener la diferencia de medias. 
+
+# c)
+
+Usando el diagrama de cajas solo existe un protafolio con las acciones de NVDA TSLA AMD que presentan un dato atipico para su segundo día a partir del 1 de enero del 2019  
+
+```{r echo=FALSE, fig.width=6, fig.height=4}
+boxplot(portafolio_GME_BABA_AAPL, main= "portafolio_GME_BABA_AAPL")
+```
+
+```{r echo=FALSE, fig.width=6, fig.height=4}
+boxplot(portafolio_NVDA_BABA_AMD, main="portafolio_NVDA_BABA_AMD")
+```
+
+```{r echo=FALSE, fig.width=7, fig.height=5}
+boxplot(portafolio_NVDA_TSLA_AMD, main = "portafolio_NVDA_TSLA_AMD")
+```
+
+## Parte 3
+
+# 1)
+
+# 2)
+
+## Anexo
