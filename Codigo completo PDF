@@ -3,29 +3,25 @@ title: "Tarea LEC"
 author: "LEC de probabilidad y estadistica"
 date: "12/06/2022"
 output:
-  pdf_document: default
+  pdf_document: 
+    toc: yes
+    toc_depth: 2
   word_document: default
   html_notebook: default
   html_document:
     df_print: paged
 ---
 ### Integrantes
-- Esteban
-- Matias
-- Oscar
-- Benja Perez
+- Esteban Muller
+- Matias Ochoa
+- Javier Vargas
+- Benjamín Pérez
 - Diego Espinoza
 - Vicente Carvajal
 
-### Indice
-- 1.- Introduccion
-- 2.- Desarrollo
--     2.1.- Parte 1
--     2.2.- Parte 2
--     2.3.- Parte 3
-- 3.- Conclusion
+\newpage 
 
-# Datos
+### Datos
 Acciones de *TSLA, GME, AAPL, AMD, TWTR, NVDA, BABA*  
 
 Con portafolios de: 
@@ -47,8 +43,12 @@ library(tigerstats)
 library(EnvStats)
 library(quantmod)
 ```
-## Introduccion
+
+
+# Introduccion
 En este proyecto lo que buscamos es aplicar todo lo visto en la cátedra del ramo **LEC** para poder analizar y crear gráficos a través del valor de las acciones de ciertas empresas, ya sea **BABA, AMD, APPL**, etc. Con esto lo que buscamos es responder las preguntas solicitadas en la que se nos pide crear ciertos portafolios e interpretar datos obtenidos gracias a la librería **quantmod** que es la que nos brindara el valor de las acciones de las empresas que el informe nos brinda.
+
+\newpage 
 
 # Desarrollo
 
@@ -258,9 +258,11 @@ Explicando la leyenda, tenemos que:
 
 Del gráfico, podemos observar que el primer portafolio no sería una buena inversión, ya que es el con menor rentabilidad de los tres portafolios, mientras que el tercer portafolio sería la mejor inversión, dado que es el con mejor rentabilidad en los primeros 100 días.
 
+\newpage 
+
 ## Parte 2
 
-# a) 
+### a) 
 
 En el 2019 las acciones de **TSLA y GME** van hacia la baja, mientras que las acciones de **AAPL** suben. Donde cabe resalrtar que en un periodo entre mayo y julio las acciones de TSLA bajaron con una pendiente muy marcada, para luego recuperarse pero manteniendo su valor de manera constante.
 
@@ -295,7 +297,7 @@ lines( fecha,  datos$AAPL.Open,
        pch = 1 )
 ```
 
-# Leyenda
+### Leyenda
 
 - La  linea azul corresponde a  **TSLA**
 - La linea naranga corresponde a **GME**
@@ -334,7 +336,7 @@ lines( fecha,  datos$NVDA.Open,
        pch = 1 )
 ```
 
-# Leyenda
+### Leyenda
 
 - La  linea azul corresponde a  **AMD**
 - La linea naranga corresponde a **TWTR**
@@ -373,13 +375,13 @@ lines( fecha,  datos$NVDA.Open,
        pch = 1 )
 ```
 
-# Leyenda
+### Leyenda
 
 - La  linea azul corresponde a **BABA**
 - La linea naranga corresponde **AAPL**
 - La linea verde corresponde a **NVDA**
 
-# b) 
+### b) 
 
 Si, porque en la mayoria de los casos la dif es mayor a 3 digitos, especialmente para el 6 mes. pero que en los meses 7 y 8 la diferencia no es tan significativo.
 
@@ -408,7 +410,7 @@ testGC
 ```
 Con un nivel de significancia del 0.05, podemos decir que el intervalo, con una probabilidad de 95%, puede contener la diferencia de medias. 
 
-# c)
+### c)
 
 Usando el diagrama de cajas solo existe un protafolio con las acciones de NVDA TSLA AMD que presentan un dato atipico para su segundo día a partir del 1 de enero del 2019  
 
@@ -423,11 +425,68 @@ boxplot(portafolio_NVDA_BABA_AMD, main="portafolio_NVDA_BABA_AMD")
 ```{r echo=FALSE, fig.width=7, fig.height=5}
 boxplot(portafolio_NVDA_TSLA_AMD, main = "portafolio_NVDA_TSLA_AMD")
 ```
+\newpage 
 
 ## Parte 3
 
-# 1)
+### 1)
 
-# 2)
+Usando como predictor el S&P 500, que es un indicador de mercado que contempla los valores de las 500 empresas más grandes de Estados Unidos, le realizamos una regresión lineal a cada una una de las acciones de nuestro portafolio, para así ver en cual es más conveniente invertir para recomendarla a Light Industries, la empresa que estamos asesorando.
 
-## Anexo
+Partimos corriendo el código para que nos muestre los valores de las acciones en un rango de 300 días del portafolio *AMD-TWTR-NVDA*. (De igual manera se hizo el mismo procedimiento para las otras empresas, ver en el anexo)
+
+```{r}
+getSymbols("^GSPC", src = "yahoo", from = "2019-01-01", to = "2019-09-28", periodicity = "daily")
+
+```
+
+```{r include=FALSE, results='hide', message=FALSE}
+getSymbols("AMD", src = "yahoo", from = "2019-01-01", to = "2019-09-28", periodicity = "daily")
+getSymbols("NVDA", src = "yahoo", from = "2019-01-01", to = "2019-09-28", periodicity = "daily")
+getSymbols("TWTR", src = "yahoo", from = "2019-01-01", to = "2019-09-28", periodicity = "daily")
+
+GSPC <- data.frame(GSPC)
+AMD <- data.frame(AMD)
+NVDA <- data.frame(NVDA)
+TWTR <- data.frame(TWTR)
+```
+
+```{r}
+###primera accion del portafolio
+Acc_1 <- lm(GSPC$GSPC.Open~AMD$AMD.Open)
+plot(x=AMD$AMD.Open, y=GSPC$GSPC.Open, main = "Predicción AMD según sp500",xlab = "Acciones dia_i AMD", ylab="Valor apertura sp500")
+abline(Acc_1)
+summary(Acc_1)
+```
+
+```{r}
+###segunda accion del portafolio
+Acc_2 <- lm(GSPC$GSPC.Open~TWTR$TWTR.Open)
+plot(x=TWTR$TWTR.Open, y=GSPC$GSPC.Open, , main = "Predicción TWTR según sp500",xlab = "Acciones dia_i TWTR", ylab="Valor apertura sp500")
+abline(Acc_2)
+summary(Acc_2)
+```
+
+```{r}
+###tercera accion del portafolio
+Acc_3 <- lm(GSPC$GSPC.Open~NVDA$NVDA.Open)
+plot(x=NVDA$NVDA.Open, y=GSPC$GSPC.Open, main = "Predicción NVDA según sp500",xlab = "Acciones dia_i NVDA", ylab="Valor apertura sp500")
+abline(Acc_3)
+summary(Acc_3)
+```
+Analizando los gráficos, le recomendarías a Light Industries invertir en la acción AMD, ya que basándonos en su R2y usando S&P 500 como predictor, podríamos predecir que es la acción que más rentara a futuro, ya que tiene una buena correlación con el predictor..
+R2= 0.8056
+
+### 2)
+
+Si se pudiera cumplir cualquier deseo para mejorar el portafolio esto sería que las tres acciones se parezcan  a la más grande y que su aumentos sea más constante en el tiempo
+
+\newpage 
+
+# Conclusión
+
+En base a lo analizado y estudiado durante todo la realización del informe, hemos podido percatarnos de lo importante que es estar informado sobre el mundo de la acciones y sus distintas variables para poder tener éxito en este mundo, y dado a nuestro pequeño análisis e estudio hemos podido aprender una pequeña parte sobre el funcionamiento de las acciones y las distintas formas que existen para evaluarlas y poder encontrar el portafolio más interesante y con mejores resultados para poder invertir, además de poder predecir su variabilidad en torno al precio de las acciones a un futuro. Además es importante el uso que podemos obtener de R ya que este nos sirve para poder analizar de mejor manera el mundo financiero y así poder aprender más de él, por lo que podemos decir que R es una herramienta importante y fundamental para el éxito del mundo financiero.
+
+# Anexo
+
+Aca se encuentra el [**enlace**](https://github.com/Diegoesp911/R-markdown/blob/main/Codigo%20completo%20PDF) para ingresar al código completo del PDF.
